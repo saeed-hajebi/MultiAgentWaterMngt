@@ -182,6 +182,7 @@ to negotiate-clusters
   ]
   
   set num-valves count links with [color = red]
+  ;;;set numb-clusters count
     
 ;;;;;;; setting the mean of cluster elevation as a label for the longest link
 ;;;;;;; I have some problem with this so I've commented this piece of code
@@ -204,10 +205,13 @@ to-report keep-or-change-cluster
   
     let mean-elevation-my mean [elevation] of turtles with [color = my-color]
     let mean-elevation-neighbor mean [elevation] of turtles with [color = neighbor-color]
-    if (elevation - mean-elevation-my > elevation - mean-elevation-neighbor) [
-      set color neighbor-color
-      set change-flag 1
-      ;show "change cluster!!"
+    ;;;;; To set threshold for the elevation difference ;;;;;
+    if ((abs(mean-elevation-my - mean-elevation-neighbor)) > elevation-difference-threshold) [  
+      if (elevation - mean-elevation-my > elevation - mean-elevation-neighbor) [
+        set color neighbor-color
+        set change-flag 1
+        ;show "change cluster!!"
+      ]
     ]
   ]
   report change-flag
@@ -217,7 +221,7 @@ end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;; reading the files and importing the network data inot NetLogo ;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;; reading the files and importing the network data inot NetLoho ;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -229,7 +233,7 @@ end
 ;; Reading files containing input nodes, reservoirs, tanks, links, pumps, etc.
 to import-nodes
   ;; Opening the file
-  file-open "Net3_junctions_with_coords.dat"
+  file-open (word file-name "_junctions_with_coords.dat")
   ;; Read all of the file data are ordered
   while [not file-at-end?]
   [
@@ -246,8 +250,8 @@ to import-nodes
       set junction_pattern item 3 items
       set junction_xcor item 4 items
       set junction_ycor item 5 items
-      set xcor junction_xcor
-      set ycor junction_ycor
+      set xcor junction_xcor * scaling-factor
+      set ycor junction_ycor * scaling-factor
       ;set label item 0 items ; shows the node_id of each node
       ;; set sector item 6 items
       set label who ; shows the elevation of each node
@@ -255,7 +259,7 @@ to import-nodes
   ]
   file-close
   
-  file-open "Net3_reservoirs_with_coords.dat"
+  file-open (word file-name "_reservoirs_with_coords.dat")
   ;; Read all of the file data are ordered
   ;; reservoirs-own [reservoir_id, reservoir_head, reservoir_xcor, reservoir_ycor]
   while [not file-at-end?]
@@ -275,14 +279,14 @@ to import-nodes
       set reservoir_head item 2 items
       set reservoir_xcor item 3 items
       set reservoir_ycor item 4 items
-      set xcor reservoir_xcor
-      set ycor reservoir_ycor
+      set xcor reservoir_xcor * scaling-factor
+      set ycor reservoir_ycor * scaling-factor
       set label item 0 items ; shows the node_id of each node
       ]        
   ]
   file-close
   
-  file-open "Net3_tanks_with_coords.dat"
+  file-open (word file-name "_tanks_with_coords.dat")
   ;; Read all of the file data are ordered
   ;; tanks-own [tank_id tank_elevation tank_initLevel tank_minLevel tank_maxLevel tank_diameter tank_minVol tank_xcor tank_ycor]
   while [not file-at-end?]
@@ -306,8 +310,8 @@ to import-nodes
       set tank_minVol item 6 items
       set tank_xcor item 7 items
       set tank_ycor item 8 items
-      set xcor tank_xcor
-      set ycor tank_ycor
+      set xcor tank_xcor * scaling-factor
+      set ycor tank_ycor * scaling-factor
       set label item 0 items ; shows the node_id of each node
       ]        
   ]
@@ -318,7 +322,7 @@ end
 ;; This procedure reads from another file that contains all the links
 
 to import-links
-  file-open "Net3_links.dat" 
+  file-open (word file-name "_links.dat" )
   ;; pipes-own [pipe_id  pipe_node1 pipe_node2 pipe_length pipe_diameter pipe_roughness pipe_minorLoss pipe_status]
   while [not file-at-end?]
   [
@@ -341,7 +345,7 @@ to import-links
    ]
   file-close
   
-  file-open "Net3_pumps4NetLogo.dat" 
+  file-open (word file-name "_pumps4NetLogo.dat")
   while [not file-at-end?]
   [
     let items read-from-string (word "[" file-read-line "]")
@@ -365,34 +369,12 @@ end
 to-report get-node [id]
   report one-of turtles with [node_id = id]
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 463
 11
-1117
-546
+1887
+1456
 -1
 -1
 14.0
@@ -406,9 +388,9 @@ GRAPHICS-WINDOW
 0
 1
 0
-45
+100
 0
-35
+100
 0
 0
 0
@@ -485,7 +467,7 @@ CHOOSER
 num-clusters
 num-clusters
 2 3 4 5 6 7 8 9 10
-1
+4
 
 SWITCH
 46
@@ -494,14 +476,14 @@ SWITCH
 100
 clusters-equals-sources
 clusters-equals-sources
-1
+0
 1
 -1000
 
 BUTTON
-226
+230
 24
-295
+299
 58
 NIL
 cluster
@@ -526,6 +508,43 @@ threshold-num-of-changes
 10
 4
 1
+1
+NIL
+HORIZONTAL
+
+INPUTBOX
+49
+171
+168
+231
+file-name
+Net3
+1
+0
+String
+
+INPUTBOX
+191
+172
+287
+232
+scaling-factor
+1
+1
+0
+Number
+
+SLIDER
+250
+112
+432
+145
+elevation-difference-threshold
+elevation-difference-threshold
+0
+10
+1
+0.1
 1
 NIL
 HORIZONTAL
