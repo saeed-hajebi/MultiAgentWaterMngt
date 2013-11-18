@@ -10,7 +10,7 @@ How to cite: Hajebi, S., Barrett, S., Clarke, A. and Clarke, S.,
   
 
 How to use:
-Download the EpanetExport tool, 
+Download the EpanetExport tool (https://github.com/saeed-hajebi/EpanetExport), 
 create the necessary files using it (see the related Readme file), 
 download and copy the WaterManagement.nlogo in the same directory as the created files. 
 Open WaterManagement.nlogo file, type the EPANET input (*.inp) file name (without .inp) into the file_name box. 
