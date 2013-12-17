@@ -19,4 +19,4 @@ You may need to use sclaing-factor if the geographic scale of the network is lar
   It is tricky and needs some try and error, and sometimes needs changing the settings 
   of NetLogo to make it accomodate the size of the network.
   
-Note: To run this model, you need to install the NetLogo Network extension. Just download it form https://github.com/downloads/NetLogo/NW-Extension/nw-ext-beta-0.02.zip, unzip it and put the nw directory to your /extensions of your NetLogo installation path. (e.g in Windowos it is: C:\Program Files (x86)\NetLogo 5.0.4\extensions).
+Note: To run this model, you need to install the NetLogo Network extension. Just download it from https://github.com/downloads/NetLogo/NW-Extension/nw-ext-beta-0.02.zip, unzip it and put the nw directory to your /extensions of your NetLogo installation path. (e.g in Windowos it is: C:\Program Files (x86)\NetLogo 5.0.4\extensions).
